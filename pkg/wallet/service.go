@@ -75,7 +75,7 @@ func (s *Service) Pay(accountID int64, amount types.Money, category types.Paymen
   return payment, nil
 }
 
-func (service *Service) FindAccountById(AccountID int64)(*types.Account,error){
+func (service *Service) FindAccountByID(AccountID int64)(*types.Account,error){
 	
    for _,account:=range service.accounts{
 	   if(account.ID==AccountID){
