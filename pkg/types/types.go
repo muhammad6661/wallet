@@ -6,11 +6,22 @@ type Phone string
 type PaymentCategory string 
 
 
+//PaymentStatus string
+type PaymentStatus string
+
+//Statuses
+const(
+  PaymentStatusOk PaymentStatus = "OK"
+  PaymentStatusFail PaymentStatus = "FAIL"
+  PaymentStatusInProgress PaymentStatus = "INPROGRESS"
+)
+
 type Payment struct {
 	ID string
 	AccountID int64
 	Amount Money
     Category PaymentCategory
+	Status PaymentStatus
 }
 
 
