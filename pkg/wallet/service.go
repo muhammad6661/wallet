@@ -124,7 +124,7 @@ func (s *Service)Reject(paymentID string ) error{
        if account==nil{
          return ErrPaymentNotFound
        }
-     payment.Stsfatus=types.PaymentStatusFail
+     payment.Status=types.PaymentStatusFail
      account.Balance+=payment.Amount
    
    return nil
