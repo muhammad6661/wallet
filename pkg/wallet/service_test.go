@@ -2,7 +2,6 @@ package wallet
 
 import (
 	"testing"
-	"fmt"
 )
 
 func TestService_FindAccountById_success(t *testing.T){
@@ -29,17 +28,17 @@ if err == nil {
 }	
 func TestService_Reject_found(t *testing.T){
 	sv:=Service{}
-	pay,_:=sv.Pay(1,10,"Alif");fmt.Println(pay)
-	err:=sv.Reject("2")
-
-
-if err == nil {
+	sv.RegisterAccount("901605036")
+	pay,_:=sv.Pay(1,10,"Alif");
+	err:=sv.Reject(pay.ID)
+if err != nil {
 	t.Errorf("\ngot > %v \nwant > %v", err,nil)
 } 
 }	
 
 func TestService_Reject_faild(t *testing.T){
 	sv:=Service{}
+	sv.RegisterAccount("901605036")
 	_,_=sv.Pay(1,10,"Alif");
 	err:=sv.Reject("20")
 
@@ -49,18 +48,22 @@ if err == nil {
 }	
 func TestService_FindPaymentById_found(t *testing.T){
 	sv:=Service{}
-	_,_=sv.Pay(1,10,"Alif");
-	_,err:=sv.FindPaymentById("5")
+	sv.RegisterAccount("901605036")
+
+	pay,_:=sv.Pay(1,10,"Alif");
+	_,err:=sv.FindPaymentByID(pay.ID)
 
 
-if err == nil {
+if err != nil {
 	t.Errorf("\ngot > %v \nwant > %v", err,nil)
 } 
 }	
-func TestService_FindPaymentById_faild(t *testing.T){
+func TestService_FindPaymentByID_faild(t *testing.T){
 	sv:=Service{}
+	sv.RegisterAccount("901605036")
+
 	_,_=sv.Pay(1,10,"Alif");
-	_,err:=sv.FindPaymentById("10")
+	_,err:=sv.FindPaymentByID("10")
 
 if err == nil {
 	t.Errorf("\ngot > %v \nwant > %v", err,ErrPaymentNotFound)

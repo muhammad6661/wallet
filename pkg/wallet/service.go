@@ -37,7 +37,7 @@ func (s *Service) RegisterAccount(phone types.Phone) (*types.Account, error){
    account := &types.Account{
   ID: s.nextAccountID,
   Phone: phone,
-  Balance: 0,
+  Balance: 200,
 }
    s.accounts = append(s.accounts, account)
 
@@ -82,7 +82,7 @@ func (s *Service)Reject(paymentID string ) error{
    for _,i:=range s.payments{
      if(i.ID==paymentID){
        i.Status=types.PaymentStatusFail
-       account,_:=s.FindAccountByID(i.AccountID)
+       account,_:=s.FindAccountByID(  i.AccountID)
        account.Balance+=i.Amount
        i.Amount=0
        return nil
@@ -91,7 +91,7 @@ func (s *Service)Reject(paymentID string ) error{
    return ErrPaymentNotFound
 }
 
-func (s *Service)FindPaymentById(paymentID string)(*types.Payment,error){
+func (s *Service)FindPaymentByID(paymentID string)(*types.Payment,error){
   for _,i:=range s.payments{
     if(i.ID==paymentID){
       return i ,nil
@@ -111,3 +111,4 @@ func (service *Service) FindAccountByID(AccountID int64)(*types.Account,error){
    }
    return nil,ErrAccountNotFound
 }
+
