@@ -99,20 +99,35 @@ func (s *Service) Deposit(accountID int64, amount types.Money)error {
 
 
 func (s *Service)Reject(paymentID string ) error{
+   
+  var payment *types.Payment
+
    for _,i:=range s.payments{
      if(i.ID==paymentID){
-       i.Status=types.PaymentStatusFail
-       for _,j:=range s.accounts{
-         if(i.AccountID==j.ID){
-           j.Balance+=i.Amount
-           
+      payment=i
+      break
          }
        }
-       i.Amount=0
-       return nil
-     }
-   }
-   return ErrPaymentNotFound
+  
+       if payment==nil{
+         return ErrPaymentNotFound
+       }
+
+      var account *types.Account
+      for _,i:=range s.accounts{
+        if i.ID==payment.AccountID{
+          account=i
+          break
+        }
+      }
+
+       if account==nil{
+         return ErrPaymentNotFound
+       }
+     payment.Status=types.PaymentStatusFail
+     account.Balance+=payment.Amount
+   
+   return nil
 }
 
 func (s *Service)FindPaymentByID(paymentID string)(*types.Payment,error){
