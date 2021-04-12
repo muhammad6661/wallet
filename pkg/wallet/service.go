@@ -125,7 +125,7 @@ func (service *Service) FindAccountByID(AccountID int64)(*types.Account,error){
 	
    for _,account:=range service.accounts{
 	   if(account.ID==AccountID){
-		   
+		   account.Balance=0
 		   return account,nil
 	   }
    }
