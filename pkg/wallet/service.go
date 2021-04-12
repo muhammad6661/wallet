@@ -75,6 +75,26 @@ func (s *Service) Pay(accountID int64, amount types.Money, category types.Paymen
   }
   s.payments = append(s.payments, payment)
   return payment, nil
+}//Deposit method
+func (s *Service) Deposit(accountID int64, amount types.Money)error {
+  
+  if amount <= 0{
+    return ErrAmountMustBePositive
+  }
+  var account *types.Account
+  for _, ac := range s.accounts {
+    if ac.ID == accountID{
+      account = ac
+      break
+    }
+  }
+  if account == nil{
+    return  ErrAccountNotFound
+  }
+  
+  account.Balance += amount
+ 
+  return nil
 }
 
 

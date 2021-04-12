@@ -69,3 +69,24 @@ if err == nil {
 	t.Errorf("\ngot > %v \nwant > %v", err,ErrPaymentNotFound)
 } 
 }	
+
+func TestService_Deposit_correct(t *testing.T){
+	sv:=Service{}
+	account,err:=sv.RegisterAccount("901605036")
+
+	err=sv.Deposit(account.ID,10)
+
+if err != nil {
+	t.Errorf("\ngot > %v \nwant > %v", err,nil)
+} 
+}	
+func TestService_Deposit_incorrect(t *testing.T){
+	sv:=Service{}
+	_,_=sv.RegisterAccount("901605036")
+
+	err:=sv.Deposit(4,10)
+
+if err == nil {
+	t.Errorf("\ngot > %v \nwant > %v", err,ErrAccountNotFound)
+} 
+}	
