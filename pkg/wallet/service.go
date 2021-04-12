@@ -102,7 +102,7 @@ func (s *Service)Reject(paymentID string ) error{
    for _,i:=range s.payments{
      if(i.ID==paymentID){
        i.Status=types.PaymentStatusFail
-       account,_:=s.FindAccountByID(  i.AccountID)
+       account,_:=s.FindAccountByID( i.AccountID)
        account.Balance+=i.Amount
        i.Amount=0
        return nil

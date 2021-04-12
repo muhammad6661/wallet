@@ -1,6 +1,7 @@
 package wallet
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -30,6 +31,9 @@ func TestService_Reject_found(t *testing.T){
 	sv:=Service{}
 	sv.RegisterAccount("901605036")
 	pay,_:=sv.Pay(1,10,"Alif");
+	if pay.Category!="Alif"{
+		fmt.Println(pay)
+	}
 	err:=sv.Reject(pay.ID)
 if err != nil {
 	t.Errorf("\ngot > %v \nwant > %v", err,nil)
@@ -61,6 +65,7 @@ if err != nil {
 func TestService_FindPaymentByID_faild(t *testing.T){
 	sv:=Service{}
 	sv.RegisterAccount("901605036")
+	
 
 	_,_=sv.Pay(1,10,"Alif");
 	_,err:=sv.FindPaymentByID("10")
