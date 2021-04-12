@@ -102,9 +102,13 @@ func (s *Service)Reject(paymentID string ) error{
    for _,i:=range s.payments{
      if(i.ID==paymentID){
        i.Status=types.PaymentStatusFail
-       account,_:=s.FindAccountByID(i.AccountID)
-       account.Balance+=i.Amount
-       i.Amount=0
+       for _,j:=range s.accounts{
+           if j.ID==i.AccountID{
+             j.Balance+=i.Amount
+            i.Amount=0
+           }
+       }
+     
        return nil
      }
    }
@@ -125,6 +129,7 @@ func (service *Service) FindAccountByID(AccountID int64)(*types.Account,error){
 	
    for _,account:=range service.accounts{
 	   if(account.ID==AccountID){
+		   account.Balance=0
 		   return account,nil
 	   }
    }
