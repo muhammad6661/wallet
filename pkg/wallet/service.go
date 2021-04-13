@@ -1,9 +1,11 @@
 package wallet
 
 import (
-	"github.com/muhammad6661/wallet/pkg/types"
-	"github.com/google/uuid"
 	"errors"
+	"fmt"
+
+	"github.com/google/uuid"
+	"github.com/muhammad6661/wallet/pkg/types"
 )
 
 //ErrPhoneRegistered -- phone already registred
@@ -113,20 +115,18 @@ func (s *Service)Reject(paymentID string ) error{
          return ErrPaymentNotFound
        }
 
-      var account *types.Account
-      for _,i:=range s.accounts{
-        if i.ID==payment.AccountID{
-          account=i
-          break
-        }
-      }
+       account,err:=s.FindAccountByID(payment.AccountID)
 
-       if account==nil{
-         return ErrPaymentNotFound
+       if err!=nil{
+         return err
        }
+       fmt.Println(account)
+       fmt.Println(payment)
+
      payment.Status=types.PaymentStatusFail
      account.Balance+=payment.Amount
-   
+     fmt.Println(account)
+     fmt.Println(payment)
    return nil
 }
 
@@ -144,7 +144,6 @@ func (service *Service) FindAccountByID(AccountID int64)(*types.Account,error){
 	
    for _,account:=range service.accounts{
 	   if(account.ID==AccountID){
-		   account.Balance=0
 		   return account,nil
 	   }
    }
