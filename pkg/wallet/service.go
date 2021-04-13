@@ -15,16 +15,18 @@ var ErrAmountMustBePositive = errors.New("amount must be greater than zero")
 //ErrAccountNotFound -- account not found
 var ErrAccountNotFound = errors.New("account not found")
 //ErrPaymentNotFound --payment not found
-var ErrPaymentNotFound = errors.New("account not found")
+var ErrPaymentNotFound = errors.New("payment not found")
 //ErrNotEnoughtBalance -- account not found
 var ErrNotEnoughtBalance = errors.New("account not enought balance")
-
+//ErrFavoriteNotFound --payment not found
+var ErrFavoriteNotFound = errors.New("favorite not found")
 
 //Service model
 type Service struct{
   nextAccountID int64
   accounts []*types.Account
   payments []*types.Payment
+  favorites []*types.Favorites
 }
 
 //RegisterAccount meth
@@ -76,7 +78,8 @@ func (s *Service) Pay(accountID int64, amount types.Money, category types.Paymen
   }
   s.payments = append(s.payments, payment)
   return payment, nil
-}//Deposit method
+}
+//Deposit method
 func (s *Service) Deposit(accountID int64, amount types.Money)error {
   
   if amount <= 0{
@@ -98,7 +101,7 @@ func (s *Service) Deposit(accountID int64, amount types.Money)error {
   return nil
 }
 
-
+//Reject method for error payments
 func (s *Service)Reject(paymentID string ) error{
    
   var payment *types.Payment
@@ -129,6 +132,7 @@ func (s *Service)Reject(paymentID string ) error{
    return nil
 }
 
+//method Find Payment By Id
 func (s *Service)FindPaymentByID(paymentID string)(*types.Payment,error){
   for _,i:=range s.payments{
     if(i.ID==paymentID){
@@ -138,7 +142,7 @@ func (s *Service)FindPaymentByID(paymentID string)(*types.Payment,error){
   return nil, ErrPaymentNotFound
 }
 
-
+// method Find Account By ID
 func (service *Service) FindAccountByID(AccountID int64)(*types.Account,error){
 	
    for _,account:=range service.accounts{
@@ -154,7 +158,7 @@ func (service *Service) FindAccountByID(AccountID int64)(*types.Account,error){
 
 
 
-
+//method Repeat Function for payments
 func (service *Service)Repeat(paymentID string)(*types.Payment,error){
   payment,_:=service.FindPaymentByID(paymentID)
   if(payment==nil){
@@ -167,4 +171,58 @@ func (service *Service)Repeat(paymentID string)(*types.Payment,error){
 
   return new_pay,nil
  
+}
+
+
+//Favorite method
+
+func (s *Service)FavoritePayment(paymentID string,name string)(*types.Favorites,error){
+  
+   payment,_:=s.FindPaymentByID(paymentID)
+
+   if(payment==nil){
+     return nil,ErrPaymentNotFound
+   }
+   
+   
+   favorite:=&types.Favorites{
+     ID : "1",
+     AccountID : payment.AccountID,
+     Amount: payment.Amount,
+     Name: name,
+     Category: payment.Category,
+   }
+      s.favorites=append(s.favorites, favorite)
+   return favorite,nil
+
+}
+
+//method PayFromFavorite for payment
+
+func (s *Service)PayFromFavorite(favoriteID string)(*types.Payment,error){
+ 
+  favorite,_:=s.FindFavoriteByID(favoriteID)
+
+  if favorite==nil{
+    return nil,ErrFavoriteNotFound
+  }
+
+  payment,_:=s.Pay(favorite.AccountID,favorite.Amount,favorite.Category)
+   
+  if payment==nil{
+    return nil,ErrFavoriteNotFound
+  }
+   return payment,nil
+}
+
+//method for Find Favorite By Id
+
+func (s *Service)FindFavoriteByID(favoriteID string) (*types.Favorites,error){
+ 
+  for _,i:=range s.favorites{
+    if i.ID==favoriteID{
+      return i,nil
+    }
+  }
+   return nil,ErrFavoriteNotFound
 }

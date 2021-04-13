@@ -117,3 +117,30 @@ sv:=Service{}
   }
 
 }
+
+
+
+func TestFavorite_fsuccess(t *testing.T){
+
+ sv:=Service{}
+ account,_:=sv.RegisterAccount("901605036")
+
+ _=sv.Deposit(account.ID,10_000)
+
+ payment,_:=sv.Pay(account.ID,1000,"ALif")
+
+ favorite,err:=sv.FavoritePayment(payment.ID,"Academy")
+
+ if(err!=nil){
+	t.Errorf("method PayFromFavorite returned not nil error, paymentFavorite => %v", favorite)
+
+ }
+
+ pay_favorite,err:=sv.PayFromFavorite(favorite.ID)
+  
+ if err!=nil{
+	
+	t.Errorf("method PayFromFavorite returned not nil error, payfromtFavorite => %v", pay_favorite)
+
+ }
+}
