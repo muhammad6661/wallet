@@ -35,7 +35,6 @@ func TestService_Reject_found(t *testing.T){
 		fmt.Println(pay,err)
 	}
 	err=sv.Reject(pay.ID)
-	fmt.Println(err)
 if err != nil {
 	t.Errorf("\ngot > %v \nwant > %v", err,nil)
 } 
