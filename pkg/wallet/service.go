@@ -27,15 +27,6 @@ type Service struct{
   payments []*types.Payment
 }
 
-type testAccount struct{
-  phone types.Phone
-  balance types.Money
-  payments [] struct{
-    amount types.Money
-    category types.PaymentCategory
-  }
-}
-
 //RegisterAccount meth
 func (s *Service) RegisterAccount(phone types.Phone) (*types.Account, error){
    for _, account := range s.accounts {
