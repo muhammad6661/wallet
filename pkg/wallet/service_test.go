@@ -98,3 +98,22 @@ if err == nil {
 	t.Errorf("\ngot > %v \nwant > %v", err,ErrAccountNotFound)
 } 
 }	
+
+
+func Test_Repeat_success(t*testing.T){
+sv:=Service{}
+  account,_:=sv.RegisterAccount("901605036")
+  
+  _=sv.Deposit(account.ID,100_000)
+  payment,_:=sv.Pay(account.ID,100,"alif")
+   
+  pay,_:=sv.FindPaymentByID(payment.ID)
+
+
+ _,err:=sv.Repeat(pay.ID)
+
+  if(err!=nil){
+	t.Errorf("\ngot > %v \nwant > %v", err,ErrAccountNotFound)
+  }
+
+}

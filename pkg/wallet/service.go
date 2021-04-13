@@ -27,6 +27,15 @@ type Service struct{
   payments []*types.Payment
 }
 
+type testAccount struct{
+  phone types.Phone
+  balance types.Money
+  payments [] struct{
+    amount types.Money
+    category types.PaymentCategory
+  }
+}
+
 //RegisterAccount meth
 func (s *Service) RegisterAccount(phone types.Phone) (*types.Account, error){
    for _, account := range s.accounts {
@@ -149,3 +158,22 @@ func (service *Service) FindAccountByID(AccountID int64)(*types.Account,error){
    return nil,ErrAccountNotFound
 }
 
+
+
+
+
+
+
+func (service *Service)Repeat(paymentID string)(*types.Payment,error){
+  payment,_:=service.FindPaymentByID(paymentID)
+  if(payment==nil){
+    return nil,ErrPaymentNotFound
+  }
+   new_pay,err:=service.Pay(payment.AccountID,payment.Amount,payment.Category)
+   if err!=nil{
+     return nil,err
+   }
+
+  return new_pay,nil
+ 
+}
