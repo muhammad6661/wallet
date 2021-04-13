@@ -28,14 +28,14 @@ if err == nil {
 } 
 }	
 func TestService_Reject_found(t *testing.T){
-	sv:=Service{}
+	sv:=&Service{}
 	sv.RegisterAccount("901605036")
-	pay,_:=sv.Pay(1,10,"Alif");
+	pay,err:=sv.Pay(1,10,"Alif");
 	if pay.Category!="Alif"{
-		fmt.Println(pay)
+		fmt.Println(pay,err)
 	}
-	err:=sv.Reject(pay.ID)
-	
+	err=sv.Reject(pay.ID)
+	fmt.Println(err)
 if err != nil {
 	t.Errorf("\ngot > %v \nwant > %v", err,nil)
 } 
