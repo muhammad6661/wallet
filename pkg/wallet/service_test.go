@@ -30,6 +30,8 @@ if err == nil {
 func TestService_Reject_found(t *testing.T){
 	sv:=&Service{}
 	sv.RegisterAccount("901605036")
+	account,_:=sv.FindAccountByID(1)
+	sv.Deposit(account.ID,200)
 	pay,err:=sv.Pay(1,10,"Alif");
 	if pay.Category!="Alif"{
 		fmt.Println(pay,err)
@@ -53,7 +55,8 @@ if err == nil {
 func TestService_FindPaymentById_found(t *testing.T){
 	sv:=Service{}
 	sv.RegisterAccount("901605036")
-
+	account,_:=sv.FindAccountByID(1)
+	sv.Deposit(account.ID,200)
 	pay,_:=sv.Pay(1,10,"Alif");
 	_,err:=sv.FindPaymentByID(pay.ID)
 
