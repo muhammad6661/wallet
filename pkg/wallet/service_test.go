@@ -150,7 +150,7 @@ func TestService_Export_success (t *testing.T){
 	_,_=sv.RegisterAccount("901605037")
 	err:=sv.ExportToFile("../../test.txt")
    
-	if err==nil{
+	if err!=nil{
 	t.Errorf("\ngot > %v \nwant > %v", err,nil)
   
 	}
