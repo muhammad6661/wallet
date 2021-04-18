@@ -231,29 +231,23 @@ func (s *Service)FindFavoriteByID(favoriteID string) (*types.Favorites,error){
 
 
 //Method for export Account to file
+func (s *Service) ExportToFile(path string) error {
 
-func (s *Service)ExportToFile(path string) error{
-
-    
   file, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-  if err!=nil{
+  if err != nil {
     return err
   }
-
   defer file.Close()
 
-
   var str string
+  for _, v := range s.accounts {
+    str += fmt.Sprint(v.ID) + ";" + string(v.Phone) + ";" + fmt.Sprint(v.Balance) + "|"
+  }
+  _, err = file.WriteString(str)
 
- for _,item_account:=range s.accounts{
-  str+=fmt.Sprint(item_account.ID)+";"+string(item_account.Phone)+fmt.Sprint(item_account.Balance)+"|"
- }
-  _,err=file.WriteString(str)
-
-  if err!=nil{
+  if err != nil {
     return err
   }
 
-  fmt.Println(path)
-    return nil
+  return nil
 }
