@@ -3,6 +3,8 @@ package wallet
 import (
 	"errors"
 	"fmt"
+	"log"
+	"os"
 
 	"github.com/google/uuid"
 	"github.com/muhammad6661/wallet/pkg/types"
@@ -225,4 +227,35 @@ func (s *Service)FindFavoriteByID(favoriteID string) (*types.Favorites,error){
     }
   }
    return nil,ErrFavoriteNotFound
+}
+
+
+
+//Method for export Account to file
+
+func (s *Service)ExportToFile(path string) error{
+    
+  file,err:=os.Create(path)
+  if err!=nil{
+    return err
+  }
+
+  defer func(){
+    if cerr:=file.Close() ; cerr!=nil{
+      log.Print(cerr)
+    }
+  }()
+
+
+  var str string
+
+ for _,item_account:=range s.accounts{
+  str+=fmt.Sprint(item_account.ID)+";"+string(item_account.Phone)+fmt.Sprint(item_account.Balance)+"|"
+ }
+  _,err=file.WriteString(str)
+
+  if err!=nil{
+    return err
+  }
+   return nil
 }
