@@ -3,7 +3,6 @@ package wallet
 import (
 	"errors"
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/google/uuid"
@@ -240,11 +239,7 @@ func (s *Service)ExportToFile(path string) error{
     return err
   }
 
-  defer func(){
-    if cerr:=file.Close() ; cerr!=nil{
-      log.Print(cerr)
-    }
-  }()
+  defer file.Close()
 
 
   var str string

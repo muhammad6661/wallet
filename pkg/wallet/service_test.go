@@ -139,8 +139,19 @@ func TestFavorite_fsuccess(t *testing.T){
  pay_favorite,err:=sv.PayFromFavorite(favorite.ID)
   
  if err!=nil{
-	
 	t.Errorf("method PayFromFavorite returned not nil error, payfromtFavorite => %v", pay_favorite)
-
  }
+}
+
+func TestService_Export_success (t *testing.T){
+
+	sv:=Service{}
+	_,_=sv.RegisterAccount("901605036")
+	_,_=sv.RegisterAccount("901605037")
+	err:=sv.ExportToFile("../../test.txt")
+   
+	if err==nil{
+	t.Errorf("\ngot > %v \nwant > %v", err,nil)
+  
+	}
 }
