@@ -234,7 +234,7 @@ func (s *Service)FindFavoriteByID(favoriteID string) (*types.Favorites,error){
 
 func (s *Service)ExportToFile(path string) error{
     
-  file,err:=os.Create(path)
+  file, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
   if err!=nil{
     return err
   }
