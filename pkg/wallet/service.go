@@ -252,5 +252,7 @@ func (s *Service)ExportToFile(path string) error{
   if err!=nil{
     return err
   }
+
+  fmt.Println(path)
    return nil
 }
