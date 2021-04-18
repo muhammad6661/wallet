@@ -147,13 +147,26 @@ func TestFavorite_fsuccess(t *testing.T){
 func TestService_Export_success_user(t *testing.T) {
 	var svc Service
 
-	svc.RegisterAccount("+992000000001")
-	svc.RegisterAccount("+992000000002")
-	svc.RegisterAccount("+992000000003")
+	svc.RegisterAccount("901605036")
+	svc.RegisterAccount("901605037")
+	svc.RegisterAccount("901605038")
 
 	err := svc.ExportToFile("export.txt")
 	if err != nil {
 		t.Errorf("method ExportToFile returned not nil error, err => %v", err)
 	}
 
+}
+func TestService_Import_success(t *testing.T) {
+	var svc Service
+
+	err := svc.ExportToFile("export.txt")
+	if err != nil {
+		t.Errorf("method ExportToFile returned not nil error, err => %v", err)
+	}
+
+   err=svc.ImportFromFile("export.txt")
+   if err != nil {
+	t.Errorf("method ImportToFile returned not nil error, err => %v", err)
+} 
 }

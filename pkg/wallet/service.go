@@ -3,7 +3,10 @@ package wallet
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"os"
+	"strconv"
+	"strings"
 
 	"github.com/google/uuid"
 	"github.com/muhammad6661/wallet/pkg/types"
@@ -249,5 +252,28 @@ func (s *Service) ExportToFile(path string) error {
     return err
   }
 
+  return nil
+}
+
+func (s *Service)ImportFromFile(path string) error{
+ 
+   data,err:=ioutil.ReadFile(path)
+   if err!=nil{
+     return err
+   }
+   str:=strings.Split(string(data),"|")
+
+   for i:=0; i<len(str)-1;i++{
+      str_item:=strings.Split(str[i],";")
+      id, _:= strconv.ParseInt(str_item[0], 10, 64)
+      balance, _:= strconv.ParseInt(str_item[2], 10, 64)
+       phone:=(str_item[1])
+       s.accounts=append( s.accounts,&types.Account{
+        ID: id,
+        Phone: types.Phone(phone),
+       Balance: types.Money(balance),
+      })
+
+   }
   return nil
 }
