@@ -233,7 +233,7 @@ func (s *Service)FindFavoriteByID(favoriteID string) (*types.Favorites,error){
 //Method for export Account to file
 
 func (s *Service)ExportToFile(path string) error{
-  
+
     
   file, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
   if err!=nil{
@@ -255,5 +255,5 @@ func (s *Service)ExportToFile(path string) error{
   }
 
   fmt.Println(path)
-   return nil
+    return nil
 }
