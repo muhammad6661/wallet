@@ -170,3 +170,43 @@ func TestService_Import_success(t *testing.T) {
 	t.Errorf("method ImportToFile returned not nil error, err => %v", err)
 } 
 }
+
+
+func TestService_Export(t *testing.T) {
+	var svc Service
+
+	account1,_:=svc.RegisterAccount("901605036")
+	account2,_:=svc.RegisterAccount("901605037")
+	account3,_:=svc.RegisterAccount("901605038")
+
+	_=svc.Deposit(account1.ID,10_000)
+	_=svc.Deposit(account2.ID,10_000)
+	_=svc.Deposit(account3.ID,10_000)
+
+	payment1,_:=svc.Pay(account1.ID,1000,"ALif1")
+	payment2,_:=svc.Pay(account2.ID,1000,"ALif2")
+	payment3,_:=svc.Pay(account3.ID,1000,"ALif3")
+   
+	_,_=svc.FavoritePayment(payment1.ID,"Academy1")
+	_,_=svc.FavoritePayment(payment2.ID,"Academy2")
+	_,_=svc.FavoritePayment(payment3.ID,"Academy3")
+
+
+	err := svc.Export("./../dump")
+	if err != nil {
+		t.Errorf("method ExportToFile returned not nil error, err => %v", err)
+	}
+
+}
+
+
+func TestService_Import(t *testing.T) {
+	var svc Service
+
+
+	err := svc.Import("./../dump")
+	if err != nil {
+		t.Errorf("method ImportFromFile returned not nil error, err => %v", err)
+	}
+
+}

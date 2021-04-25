@@ -1,8 +1,10 @@
 package wallet
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"strconv"
@@ -276,4 +278,211 @@ func (s *Service)ImportFromFile(path string) error{
 
    }
   return nil
+}
+
+
+
+//Method for Full-Export service;
+func (s *Service) Export(dir string) error {
+
+     dirAcounts:=dir+"/accounts.dump"
+     dirPayments:=dir+"/payments.dump"
+     dirFavorites:=dir+"/favorites.dump"
+//File Accounts
+  fileAccounts, err := os.OpenFile(dirAcounts, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+  if err != nil {
+    return err
+  }
+  defer fileAccounts.Close()
+  var str string
+  for _, v := range s.accounts {
+    str += fmt.Sprint(v.ID) + ";" + string(v.Phone) + ";" + fmt.Sprint(v.Balance) + "\n"
+  }
+  _, err = fileAccounts.WriteString(str)
+  if err != nil {
+    return err
+  }
+  //File Payments
+  filePayments, err:= os.OpenFile(dirPayments, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+  if err != nil {
+    return err
+  }
+  defer filePayments.Close()
+  var strP string
+  for _, v := range s.payments {
+    strP += fmt.Sprint(v.ID) + ";" + fmt.Sprint(v.AccountID) + ";" + fmt.Sprint(v.Amount) +";"+ fmt.Sprint(v.Category) +";"+ fmt.Sprint(v.Status) + "\n"
+  }
+  _, err = filePayments.WriteString(strP)
+  if err != nil {
+    return err
+  }
+    //File Favorites
+    fileFavorites, err:= os.OpenFile(dirFavorites, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+    if err != nil {
+      return err
+    }
+    defer fileFavorites.Close()
+    var strF string
+    for _, v := range s.favorites {
+      strF += fmt.Sprint(v.ID) + ";" + fmt.Sprint(v.AccountID) + ";" + fmt.Sprint(v.Name) +";"+ fmt.Sprint(v.Amount) +";"+ fmt.Sprint(v.Category) + "\n"
+    }
+    _, err = fileFavorites.WriteString(strF)
+    if err != nil {
+      return err
+    }
+
+
+  return nil
+}
+
+
+//Method for Full-Import service
+func (s *Service)Import(dir string) error{
+  dirAcounts:=dir+"/accounts.dump"
+  dirPayments:=dir+"/payments.dump"
+  dirFavorites:=dir+"/favorites.dump"
+
+
+//File Accounts
+  err:=s.FillAccountFromFile(dirAcounts)
+  if (err!=nil){
+    return err
+  }
+
+  //File Payments
+  err=s.FillPaymentsFromFile(dirPayments)
+  if (err!=nil){
+    return err
+  }
+
+   //File Favorites
+   err=s.FillFavoritesFromFile(dirFavorites)
+   if (err!=nil){
+     return err
+   }
+fmt.Printf("%+v",s.accounts)
+fmt.Printf("%+v",s.payments)
+fmt.Printf("%+v",s.favorites)
+
+return nil
+}
+
+func(s*Service)FillAccountFromFile(path string) error{
+  fileAccounts, err := os.Open(path)
+if err != nil {
+ return err
+}
+defer fileAccounts.Close()
+  readerA:=bufio.NewReader(fileAccounts)
+  for{
+	line,err:=readerA.ReadString('\n')
+	if err==io.EOF{
+		fmt.Println(line)
+		break
+	}
+	if err!=nil{
+		fmt.Println(err)
+		return err
+	}
+  str_item:=strings.Split(line,";")
+  id, _:= strconv.ParseInt(str_item[0], 10, 64)
+  balance, _:= strconv.ParseInt(str_item[2], 10, 64)
+   phone:=(str_item[1])
+   _,err=s.FindAccountByID(id)
+   if  err==nil {
+    continue
+} else{
+   s.accounts=append( s.accounts,&types.Account{
+    ID: id,
+    Phone: types.Phone(phone),
+   Balance: types.Money(balance),
+  })
+}
+
+}
+ return nil
+}
+
+func(s*Service)FillPaymentsFromFile(path string) error{
+  filePayments, err := os.Open(path)
+if err != nil {
+ return err
+}
+defer filePayments.Close()
+  readerA:=bufio.NewReader(filePayments)
+  for{
+	line,err:=readerA.ReadString('\n')
+	if err==io.EOF{
+		fmt.Println(line)
+		break
+	}
+	if err!=nil{
+		fmt.Println(err)
+		return err
+	}
+  str_item:=strings.Split(line,";")
+  id:= str_item[0]
+  AccountID, _:= strconv.ParseInt(str_item[1], 10, 64)
+  Amount, _:= strconv.ParseInt(str_item[2], 10, 64)
+  Category:=str_item[3]
+  Status:=str_item[4]
+   _,err=s.FindPaymentByID(id)
+   if  err==nil {
+    continue
+} else{
+   s.payments=append( s.payments,&types.Payment{
+    ID: id,
+    AccountID: AccountID,
+    Amount: types.Money(Amount),
+   Category: types.PaymentCategory(Category),
+   Status: types.PaymentStatus(Status),
+  })
+}
+
+}
+ return nil
+}
+
+
+//Fill Favorites sllice service
+
+func(s*Service)FillFavoritesFromFile(path string) error{
+  fileFavorites, err := os.Open(path)
+if err != nil {
+ return err
+}
+defer fileFavorites.Close()
+  readerA:=bufio.NewReader(fileFavorites)
+  for{
+	line,err:=readerA.ReadString('\n')
+	if err==io.EOF{
+		fmt.Println(line)
+		break
+	}
+	if err!=nil{
+		fmt.Println(err)
+		return err
+	}
+  str_item:=strings.Split(line,";")
+  id:= str_item[0]
+  AccountID, _:= strconv.ParseInt(str_item[1], 10, 64)
+  Name:=str_item[2]
+  Amount, _:= strconv.ParseInt(str_item[3], 10, 64)
+  Category:=str_item[4]
+
+   _,err=s.FindFavoriteByID(id)
+   if  err==nil {
+    continue
+} else{
+   s.favorites=append( s.favorites,&types.Favorites{
+    ID: id,
+    AccountID: AccountID,
+    Amount: types.Money(Amount),
+   Category: types.PaymentCategory(Category),
+   Name:Name,
+  })
+}
+
+}
+ return nil
 }
