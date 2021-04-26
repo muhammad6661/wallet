@@ -384,16 +384,10 @@ return nil
 
 func(s*Service)FillAccountFromFile(path string) error{
   fileAccounts, err := os.Open(path)
-  if err != nil {
-    return err
-   }
   _,err=fileAccounts.Stat()
-   if(err!=nil){
-     return err
-   }
-
 
 defer fileAccounts.Close()
+if(err==nil){
   readerA:=bufio.NewReader(fileAccounts)
   for{
 	line,err:=readerA.ReadString('\n')
@@ -422,20 +416,16 @@ defer fileAccounts.Close()
 }
 
 }
+}
  return nil
 }
 
 func(s*Service)FillPaymentsFromFile(path string) error{
   filePayments, err := os.Open(path)
-if err != nil {
- return err
-}
-_,err=filePayments.Stat()
-if(err!=nil){
-  return err
-}
+  _,err=filePayments.Stat()
 
 defer filePayments.Close()
+if(err==nil){
   readerA:=bufio.NewReader(filePayments)
   for{
 	line,err:=readerA.ReadString('\n')
@@ -469,6 +459,7 @@ defer filePayments.Close()
 }
 
 }
+}
  return nil
 }
 
@@ -477,15 +468,10 @@ defer filePayments.Close()
 
 func(s*Service)FillFavoritesFromFile(path string) error{
   fileFavorites, err := os.Open(path)
-if err != nil {
- return err
-}
 _,err=fileFavorites.Stat()
-if(err!=nil){
-  return err
-}
 
 defer fileFavorites.Close()
+if(err==nil){
   readerA:=bufio.NewReader(fileFavorites)
   for{
 	line,err:=readerA.ReadString('\n')
@@ -520,6 +506,7 @@ defer fileFavorites.Close()
   })
 }
 
+}
 }
  return nil
 }
