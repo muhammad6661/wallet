@@ -388,9 +388,10 @@ defer fileAccounts.Close()
   id, _:= strconv.ParseInt(str_item[0], 10, 64)
   balance, _:= strconv.ParseInt(str_item[2], 10, 64)
    phone:=(str_item[1])
-   _,err=s.FindAccountByID(id)
+   account,err:=s.FindAccountByID(id)
    if  err==nil {
-    continue
+    account.Balance=types.Money(balance)
+    account.Phone=types.Phone(phone)
 } else{
    s.accounts=append( s.accounts,&types.Account{
     ID: id,
@@ -426,9 +427,11 @@ defer filePayments.Close()
   Amount, _:= strconv.ParseInt(str_item[2], 10, 64)
   Category:=str_item[3]
   Status:=str_item[4]
-   _,err=s.FindPaymentByID(id)
+   payment,err:=s.FindPaymentByID(id)
    if  err==nil {
-    continue
+    payment.Amount=types.Money(Amount)
+    payment.Category=types.PaymentCategory(Category)
+    payment.Status=types.PaymentStatus(Status)
 } else{
    s.payments=append( s.payments,&types.Payment{
     ID: id,
@@ -470,9 +473,11 @@ defer fileFavorites.Close()
   Amount, _:= strconv.ParseInt(str_item[3], 10, 64)
   Category:=str_item[4]
 
-   _,err=s.FindFavoriteByID(id)
+   favorite,err:=s.FindFavoriteByID(id)
    if  err==nil {
-    continue
+    favorite.Amount=types.Money(Amount)
+    favorite.Category=types.PaymentCategory(Category)
+    favorite.Name=Name
 } else{
    s.favorites=append( s.favorites,&types.Favorites{
     ID: id,
