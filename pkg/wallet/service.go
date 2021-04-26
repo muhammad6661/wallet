@@ -299,16 +299,8 @@ func (s *Service) Export(dir string) error {
   }
 
   if(kA!=0){
-  fileAccounts, err := os.OpenFile(dirAcounts, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-  if err != nil {
-    return err
-  }
-   _,err=fileAccounts.Stat()
-   if err != nil {
-    return err
-  }
-   
-
+  fileAccounts, err := os.OpenFile(dirAcounts, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
+  
   defer fileAccounts.Close()
 
   _, err = fileAccounts.WriteString(str)
@@ -329,15 +321,8 @@ func (s *Service) Export(dir string) error {
     strP += fmt.Sprint(v.ID) + ";" + fmt.Sprint(v.AccountID) + ";" + fmt.Sprint(v.Amount) +";"+ fmt.Sprint(v.Category) +";"+ fmt.Sprint(v.Status) + "\n"
   }
   if(kP!=0){
-  filePayments, err:= os.OpenFile(dirPayments, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-  if err != nil {
-    return err
-  }
-
-  _,err=filePayments.Stat()
-  if err != nil {
-   return err
- }
+  filePayments, err:= os.OpenFile(dirPayments, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
+  
   
 
   defer filePayments.Close()
@@ -359,16 +344,10 @@ func (s *Service) Export(dir string) error {
       strF += fmt.Sprint(v.ID) + ";" + fmt.Sprint(v.AccountID) + ";" + fmt.Sprint(v.Name) +";"+ fmt.Sprint(v.Amount) +";"+ fmt.Sprint(v.Category) + "\n"
     }
     if(kF!=0){
-    fileFavorites, err:= os.OpenFile(dirFavorites, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-    if err != nil {
-      return err
-    }
-    _,err=fileFavorites.Stat()
-  if err != nil {
-   return err
- }
+    fileFavorites, _:= os.OpenFile(dirFavorites, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
+   
     defer fileFavorites.Close()
-    _, err = fileFavorites.WriteString(strF)
+    _, err := fileFavorites.WriteString(strF)
     if err != nil {
       return err
     }
