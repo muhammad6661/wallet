@@ -302,10 +302,8 @@ func (s *Service) Export(dir string) error {
   fileAccounts, _ := os.OpenFile(dirAcounts, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
   defer fileAccounts.Close()
 
-  _, err := fileAccounts.WriteString(str)
-  if err != nil {
-    return err
-  }
+  _, _= fileAccounts.WriteString(str)
+ 
 }
 
 
@@ -326,10 +324,8 @@ func (s *Service) Export(dir string) error {
 
   defer filePayments.Close()
 
-  _, err:= filePayments.WriteString(strP)
-  if err != nil {
-    return err
-  }
+  _, _= filePayments.WriteString(strP)
+
 
 }
 
@@ -346,10 +342,8 @@ func (s *Service) Export(dir string) error {
     fileFavorites, _:= os.OpenFile(dirFavorites, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
    
     defer fileFavorites.Close()
-    _, err := fileFavorites.WriteString(strF)
-    if err != nil {
-      return err
-    }
+    _, _= fileFavorites.WriteString(strF)
+  
   }
 
 
