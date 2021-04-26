@@ -478,6 +478,7 @@ defer fileFavorites.Close()
     favorite.Amount=types.Money(Amount)
     favorite.Category=types.PaymentCategory(Category)
     favorite.Name=Name
+    favorite.AccountID=AccountID  
 } else{
    s.favorites=append( s.favorites,&types.Favorites{
     ID: id,
