@@ -299,11 +299,10 @@ func (s *Service) Export(dir string) error {
   }
 
   if(kA!=0){
-  fileAccounts, err := os.OpenFile(dirAcounts, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
-  
+  fileAccounts, _ := os.OpenFile(dirAcounts, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
   defer fileAccounts.Close()
 
-  _, err = fileAccounts.WriteString(str)
+  _, err := fileAccounts.WriteString(str)
   if err != nil {
     return err
   }
@@ -321,13 +320,13 @@ func (s *Service) Export(dir string) error {
     strP += fmt.Sprint(v.ID) + ";" + fmt.Sprint(v.AccountID) + ";" + fmt.Sprint(v.Amount) +";"+ fmt.Sprint(v.Category) +";"+ fmt.Sprint(v.Status) + "\n"
   }
   if(kP!=0){
-  filePayments, err:= os.OpenFile(dirPayments, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
+  filePayments, _:= os.OpenFile(dirPayments, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
   
   
 
   defer filePayments.Close()
 
-  _, err = filePayments.WriteString(strP)
+  _, err:= filePayments.WriteString(strP)
   if err != nil {
     return err
   }
