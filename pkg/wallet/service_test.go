@@ -192,7 +192,7 @@ func TestService_Export(t *testing.T) {
 	_,_=svc.FavoritePayment(payment3.ID,"Academy3")
 
 
-	err := svc.Export("./../dump")
+	err := svc.Export("D:/Alif-Academy/Golang/src/17/1")
 	if err != nil {
 		t.Errorf("method ExportToFile returned not nil error, err => %v", err)
 	}
@@ -204,7 +204,7 @@ func TestService_Import(t *testing.T) {
 	var svc Service
 
 
-	err := svc.Import("./../dump")
+	err := svc.Import("D:/Alif-Academy/Golang/src/17/1")
 	if err != nil {
 		t.Errorf("method ImportFromFile returned not nil error, err => %v", err)
 	}

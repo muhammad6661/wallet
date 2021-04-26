@@ -289,7 +289,7 @@ func (s *Service) Export(dir string) error {
      dirPayments:=dir+"/payments.dump"
      dirFavorites:=dir+"/favorites.dump"
 //File Accounts
-
+  fmt.Println("PAs=",dir);
 
   var str string
   kA:=0
