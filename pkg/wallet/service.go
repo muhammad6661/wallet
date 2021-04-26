@@ -289,47 +289,73 @@ func (s *Service) Export(dir string) error {
      dirPayments:=dir+"/payments.dump"
      dirFavorites:=dir+"/favorites.dump"
 //File Accounts
+
+ 
+  var str string
+  kA:=0
+  for _, v := range s.accounts {
+    kA++
+    str += fmt.Sprint(v.ID) + ";" + string(v.Phone) + ";" + fmt.Sprint(v.Balance) + "\n"
+  }
+
+  if(kA!=0){
   fileAccounts, err := os.OpenFile(dirAcounts, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
   if err != nil {
     return err
   }
   defer fileAccounts.Close()
-  var str string
-  for _, v := range s.accounts {
-    str += fmt.Sprint(v.ID) + ";" + string(v.Phone) + ";" + fmt.Sprint(v.Balance) + "\n"
-  }
+
   _, err = fileAccounts.WriteString(str)
   if err != nil {
     return err
   }
+}
+
+
+
   //File Payments
+
+ 
+  var strP string
+  kP:=0
+  for _, v := range s.payments {
+    kP++
+    strP += fmt.Sprint(v.ID) + ";" + fmt.Sprint(v.AccountID) + ";" + fmt.Sprint(v.Amount) +";"+ fmt.Sprint(v.Category) +";"+ fmt.Sprint(v.Status) + "\n"
+  }
+  if(kP!=0){
   filePayments, err:= os.OpenFile(dirPayments, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
   if err != nil {
     return err
   }
   defer filePayments.Close()
-  var strP string
-  for _, v := range s.payments {
-    strP += fmt.Sprint(v.ID) + ";" + fmt.Sprint(v.AccountID) + ";" + fmt.Sprint(v.Amount) +";"+ fmt.Sprint(v.Category) +";"+ fmt.Sprint(v.Status) + "\n"
-  }
+
   _, err = filePayments.WriteString(strP)
   if err != nil {
     return err
   }
+
+}
+
+
     //File Favorites
+  
+    var strF string
+    kF:=0
+    for _, v := range s.favorites {
+      kF++
+      strF += fmt.Sprint(v.ID) + ";" + fmt.Sprint(v.AccountID) + ";" + fmt.Sprint(v.Name) +";"+ fmt.Sprint(v.Amount) +";"+ fmt.Sprint(v.Category) + "\n"
+    }
+    if(kF!=0){
     fileFavorites, err:= os.OpenFile(dirFavorites, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
     if err != nil {
       return err
     }
     defer fileFavorites.Close()
-    var strF string
-    for _, v := range s.favorites {
-      strF += fmt.Sprint(v.ID) + ";" + fmt.Sprint(v.AccountID) + ";" + fmt.Sprint(v.Name) +";"+ fmt.Sprint(v.Amount) +";"+ fmt.Sprint(v.Category) + "\n"
-    }
     _, err = fileFavorites.WriteString(strF)
     if err != nil {
       return err
     }
+  }
 
 
   return nil
@@ -369,9 +395,15 @@ return nil
 
 func(s*Service)FillAccountFromFile(path string) error{
   fileAccounts, err := os.Open(path)
-if err != nil {
- return err
-}
+  if err != nil {
+    return err
+   }
+  _,err=fileAccounts.Stat()
+   if(err!=nil){
+     return err
+   }
+
+
 defer fileAccounts.Close()
   readerA:=bufio.NewReader(fileAccounts)
   for{
@@ -409,6 +441,11 @@ func(s*Service)FillPaymentsFromFile(path string) error{
 if err != nil {
  return err
 }
+_,err=filePayments.Stat()
+if(err!=nil){
+  return err
+}
+
 defer filePayments.Close()
   readerA:=bufio.NewReader(filePayments)
   for{
@@ -454,6 +491,11 @@ func(s*Service)FillFavoritesFromFile(path string) error{
 if err != nil {
  return err
 }
+_,err=fileFavorites.Stat()
+if(err!=nil){
+  return err
+}
+
 defer fileFavorites.Close()
   readerA:=bufio.NewReader(fileFavorites)
   for{
