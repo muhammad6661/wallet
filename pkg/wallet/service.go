@@ -290,7 +290,7 @@ func (s *Service) Export(dir string) error {
      dirFavorites:=dir+"/favorites.dump"
 //File Accounts
 
- 
+
   var str string
   kA:=0
   for _, v := range s.accounts {
@@ -303,6 +303,12 @@ func (s *Service) Export(dir string) error {
   if err != nil {
     return err
   }
+   _,err=fileAccounts.Stat()
+   if err != nil {
+    return err
+  }
+   
+
   defer fileAccounts.Close()
 
   _, err = fileAccounts.WriteString(str)
@@ -327,6 +333,13 @@ func (s *Service) Export(dir string) error {
   if err != nil {
     return err
   }
+
+  _,err=filePayments.Stat()
+  if err != nil {
+   return err
+ }
+  
+
   defer filePayments.Close()
 
   _, err = filePayments.WriteString(strP)
@@ -350,6 +363,10 @@ func (s *Service) Export(dir string) error {
     if err != nil {
       return err
     }
+    _,err=fileFavorites.Stat()
+  if err != nil {
+   return err
+ }
     defer fileFavorites.Close()
     _, err = fileFavorites.WriteString(strF)
     if err != nil {
